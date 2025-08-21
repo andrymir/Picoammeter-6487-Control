@@ -1,0 +1,46 @@
+void MainWindow::on_pushButton_open_file_clicked()
+{
+    Values.clear();
+    MAX_Y=0;
+    MIN_Y=1000;
+    MAX_X=0;
+    MIN_X=1000;
+    QString ADD= QFileDialog::getOpenFileName(this, tr("Выбрать файл"), "","");
+    QFile tFile(ADD);
+    tFile.open(QIODevice::ReadOnly);
+
+    QDataStream stream(&tFile);
+    QString a="";
+    float lst[2];
+    float x,y;
+
+    while(!stream.atEnd()){
+        //a=stream.readLine();
+        stream>>lst[0]>>lst[1];
+        //lst = a.split(" ");
+
+        x=lst[0];
+        y=lst[1];
+        qDebug()<<lst[0]<<lst[1];
+
+        if(y>=0 && x>=400){
+        //X_L.append(x);
+        //Y_I.append(y);
+
+        Values.insert(x,y);
+
+
+        if(MAX_Y<y) MAX_Y = y;      //мониторим максимальное значение для нормального отображение на графике значений
+        if(MIN_Y>y) MIN_Y = y;      //мониторим минимальное значение для нормального отображение на графике значений
+        if(MAX_X<x) MAX_X = x;      //мониторим максимальное значение для нормального отображение на графике значений
+        if(MIN_X>x) MIN_X = x;      //мониторим минимальное значение для нормального отображение на графике значений
+        }
+        //qDebug()<<a;
+
+    }
+    tFile.close();
+
+    slot_rewrite_data();
+
+
+}
